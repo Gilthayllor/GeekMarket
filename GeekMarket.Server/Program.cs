@@ -1,3 +1,6 @@
+using GeekMarket.Server.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -7,6 +10,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<GeekMarketContext>(x =>
+{
+    x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string not found."));
+});
 
 var app = builder.Build();
 
