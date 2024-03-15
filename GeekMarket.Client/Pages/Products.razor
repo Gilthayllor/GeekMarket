@@ -1,0 +1,32 @@
+﻿@page "/products"
+
+<ListHeader Title="Produtos">
+    <button class="btn-action-list add" type="button">
+        Novo produto
+    </button>
+</ListHeader>
+<DefaultTable Items="tests" Context="test">
+    <TableHeader>
+        <th>Primeira</th>
+        <th>Segunda</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@test.Property1</td>
+        <td>@test.Name</td>
+    </RowTemplate>
+</DefaultTable>
+@code {
+    private List<Test> tests = new List<Test>
+    {
+        new Test{Name = "dasdasda", Property1 = "dasdada"},
+        new Test{Name = "picasuca", Property1 = "joãozinho"},
+        new Test{Name = "covid", Property1 = "hétero top"},
+    };
+
+    
+    class Test
+    {
+        public string Property1 { get; set; }
+        public string Name { get; set; }
+    }
+}
