@@ -1,0 +1,93 @@
+﻿@using System.Timers
+
+<div class="toast @GetToastClass() @_noContentClass @(IsVisible ? "slide-in": "slide-out")">
+    @switch (Type)
+    {
+        case ToastTypeEnum.Success:
+            <span class="material-symbols-outlined">task_alt</span>
+            break;
+        case ToastTypeEnum.Info:
+            <span class="material-symbols-outlined">info</span>
+            break;
+        case ToastTypeEnum.Error:
+            <span class="material-symbols-outlined">error</span>
+            break;
+        default:
+            <span class="material-symbols-outlined">info</span>
+            break;
+    }
+    <div class="content">
+        <strong>@Title</strong>
+        <p>@Content</p>
+    </div>
+    <button type="button" @onclick="CloseToast">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public ToastTypeEnum Type { get; set; } = ToastTypeEnum.Info;
+
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = "";
+
+    [Parameter]
+    public string Content { get; set; } = "";
+
+    [Parameter, EditorRequired]
+    public Action? OnClose { get; set; }
+
+    [Parameter, EditorRequired]
+    public bool IsVisible { get; set; }
+
+    private string _noContentClass => string.IsNullOrEmpty(Content) ? "no-content" : "";
+
+
+    private System.Timers.Timer _timer = null!;
+
+
+    private string GetToastClass()
+    {
+        // Retorna a classe CSS correspondente ao tipo de toast
+        return Type switch
+        {
+            ToastTypeEnum.Info => "toast-info",
+            ToastTypeEnum.Error => "toast-error",
+            ToastTypeEnum.Success => "toast-success",
+            _ => string.Empty
+        };
+    }
+
+    private void CloseToast()
+    {
+        OnClose?.Invoke();
+    }
+
+    protected override void OnInitialized()
+    {
+        InitializeTimer();
+
+        base.OnInitialized();
+    }
+
+    private void InitializeTimer()
+    {
+        _timer = new System.Timers.Timer(TimeSpan.FromSeconds(4))
+            {
+                AutoReset = false,
+            };
+
+        _timer.Elapsed += TimeElapsed;
+
+        _timer.Start();
+    }
+
+    private void TimeElapsed(object? sender, ElapsedEventArgs e)
+    {
+        _timer.Stop();
+        _timer.Dispose();
+
+        CloseToast();
+    }
+}
