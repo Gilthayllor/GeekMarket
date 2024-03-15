@@ -4,7 +4,11 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .ConfigureApiBehaviorOptions(x =>
+    {
+        x.SuppressModelStateInvalidFilter = true;
+    });
 
 builder.Services.AddRazorPages();
 
