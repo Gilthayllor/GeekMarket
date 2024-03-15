@@ -5,11 +5,7 @@ namespace GeekMarket.Server.Data
 {
     public class GeekMarketContext : DbContext
     {
-        public GeekMarketContext(DbContextOptions<GeekMarketContext> options)
-            :base(options)
-        {
-            
-        }
+        public GeekMarketContext(DbContextOptions<GeekMarketContext> options) { }
 
         public DbSet<Product> Products { get; set; }
 
