@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-
-namespace GeekMarket.Shared.Models
+﻿namespace GeekMarket.Shared.Models
 {
     public class Product
     {
@@ -12,7 +9,7 @@ namespace GeekMarket.Shared.Models
         public string Base64Image { get; set; } = null!;
         public int Quantity { get; set; }
         public bool Featured { get; set; }
-        public DateTime LastUpdate { get; set; } = DateTime.Now;
+        public DateTime LastUpdate { get; set; } = DateTime.UtcNow;
 
         public Product()
         {
