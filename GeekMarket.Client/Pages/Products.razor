@@ -1,32 +1,46 @@
 ﻿@page "/products"
+@using System.Globalization
 
-<ListHeader Title="Produtos">
-    <button class="btn-action-list add" type="button">
-        Novo produto
-    </button>
-</ListHeader>
-<DefaultTable Items="tests" Context="test">
-    <TableHeader>
-        <th>Primeira</th>
-        <th>Segunda</th>
-    </TableHeader>
-    <RowTemplate>
-        <td>@test.Property1</td>
-        <td>@test.Name</td>
-    </RowTemplate>
-</DefaultTable>
+<div class="products-list">
+    <ListHeader Title="Produtos">
+        <button class="btn-action-list add" type="button">
+            Novo produto
+        </button>
+    </ListHeader>
+    <DefaultTable Items="_products" Context="product">
+        <TableHeader>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Quantidade</th>
+            <th>Imagem</th>
+            <th>Ações</th>
+        </TableHeader>
+        <RowTemplate>
+            <td>@product.Name</td>
+            <td>@product.Description</td>
+            <td>@product.Price.ToString("c2")</td>
+            <td>@product.Quantity</td>
+            <td>
+                <div class="td-image">
+                    <span class="material-symbols-outlined">file_open</span>
+                    <span>Abrir imagem</span>
+                </div>
+            </td>
+            <td>
+                <button class="btn-action-list" type="button">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button class="btn-action-list delete" type="button">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            </td>
+        </RowTemplate>
+    </DefaultTable>
+</div>
 @code {
-    private List<Test> tests = new List<Test>
+    private List<ProductDTO> _products = new List<ProductDTO>
     {
-        new Test{Name = "dasdasda", Property1 = "dasdada"},
-        new Test{Name = "picasuca", Property1 = "joãozinho"},
-        new Test{Name = "covid", Property1 = "hétero top"},
+        new ProductDTO(Guid.NewGuid(), "Teste", "Descrição teste", 1500M, "tesdas", 4, false, DateTime.UtcNow)
     };
-
-    
-    class Test
-    {
-        public string Property1 { get; set; }
-        public string Name { get; set; }
-    }
 }

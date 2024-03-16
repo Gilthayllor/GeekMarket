@@ -1,1 +1,13 @@
-﻿
+﻿.products-list{
+    color: var(--primary);
+}
+
+.td-image {
+    display:flex;
+    align-items:center;
+    cursor:pointer;
+}
+
+.td-image span~span {
+    margin-left:0.3rem;
+}
