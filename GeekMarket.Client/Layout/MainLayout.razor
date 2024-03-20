@@ -5,12 +5,19 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 <MudLayout>
-    <MudAppBar ToolBarClass="application-toolbar object-contain" Elevation="_themeManager.AppBarElevation">
-        <MudContainer>
-            <MudImage Src="./assets/logo_geekmarket.svg" Class="application-logo"></MudImage>
+    <MudAppBar ToolBarClass="application-toolbar" Elevation="1">
+        <MudContainer Class="d-flex flex-row align-center">
+            <MudLink Class="application-logo d-inline-flex" Href="/">
+                <MudImage Src="./assets/logo_geekmarket.svg"></MudImage>
+            </MudLink>
+            <MudSpacer />
+            <MudNavMenu>
+                <MudLink Href="/products" Underline="Underline.None">Produtos</MudLink>
+            </MudNavMenu>
         </MudContainer>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" Class="application-drawer-toggle" />
     </MudAppBar>
-    <MudDrawer Open="true" ClipMode="DrawerClipMode.Always">
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Anchor="Anchor.Right" DisableOverlay>
         <MudButton>Test</MudButton>
     </MudDrawer>
     <MudMainContent>
@@ -23,6 +30,7 @@
 
 @code {
     private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
+    private bool _drawerOpen;
     public bool _themeManagerOpen = false;
 
     void OpenThemeManager(bool value)
@@ -33,14 +41,32 @@
     void UpdateTheme(ThemeManagerTheme value)
     {
         _themeManager = value;
-        _themeManager.Theme.LayoutProperties.AppbarHeight = "80px";
-        _themeManager.Theme.Palette.Primary = new MudBlazor.Utilities.MudColor("#011638");
 
         StateHasChanged();
     }
 
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
     protected override void OnInitialized()
     {
+        _themeManager.Theme = new MudTheme
+            {
+                LayoutProperties = new LayoutProperties
+                {
+                    AppbarHeight = "80px",
+                },
+                Palette = new PaletteLight
+                {
+                    Primary = new MudColor("#011638"),
+                    DrawerBackground = new MudColor("#ecf0ff"),
+                    AppbarBackground = new MudColor("#ecf0ff"),
+                    AppbarText = new MudColor("#011638"),
+                }
+            };
+
         StateHasChanged();
     }
 }
