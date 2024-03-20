@@ -1,7 +1,46 @@
 ﻿@inherits LayoutComponentBase
 
-<Header />
-@Body
 
+<MudThemeProvider Theme="_themeManager.Theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudLayout>
+    <MudAppBar ToolBarClass="application-toolbar object-contain" Elevation="_themeManager.AppBarElevation">
+        <MudContainer>
+            <MudImage Src="./assets/logo_geekmarket.svg" Class="application-logo"></MudImage>
+        </MudContainer>
+    </MudAppBar>
+    <MudDrawer Open="true" ClipMode="DrawerClipMode.Always">
+        <MudButton>Test</MudButton>
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
 
-<ToastContainer />
+<MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
+<MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
+
+@code {
+    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
+    public bool _themeManagerOpen = false;
+
+    void OpenThemeManager(bool value)
+    {
+        _themeManagerOpen = value;
+    }
+
+    void UpdateTheme(ThemeManagerTheme value)
+    {
+        _themeManager = value;
+        _themeManager.Theme.LayoutProperties.AppbarHeight = "80px";
+        _themeManager.Theme.Palette.Primary = new MudBlazor.Utilities.MudColor("#011638");
+
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        StateHasChanged();
+    }
+}
