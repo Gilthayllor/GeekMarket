@@ -45,7 +45,7 @@
 
     private void UpdateCssClass()
     {
-        _cssClass = _isActive ? CombineWithSpace(_cssClass, ActiveClass ?? DefaultActiveClass) ?? string.Empty : _cssClass;
+        _cssClass = _isActive ? CombineWithSpace(_cssClass, ActiveClass ?? DefaultActiveClass) ?? string.Empty : StyleClass ?? string.Empty;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs args)
