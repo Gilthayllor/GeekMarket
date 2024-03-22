@@ -34,7 +34,7 @@ namespace GeekMarket.Shared.Reponse
 
     public class Result<T> : Result
     {
-        public T Data { get; init; }
+        public T Data { get; set; }
 
         public Result(T data) : base()
         {

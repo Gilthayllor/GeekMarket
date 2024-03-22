@@ -13,14 +13,6 @@
     font-style: normal;
 }*/
 
-.application-logo {
-    height: 3.5rem;
-}
-
-.application-drawer-toggle {
-    visibility: collapse;
-}
-
 .main-wrapper {
     max-width: 75rem;
     margin: 0 auto;
@@ -103,10 +95,4 @@
 
 code {
     color: #c02d76;
-}
-
-@media (max-width: 700px) {
-    .application-drawer-toggle {
-        visibility: visible;
-    }
 }

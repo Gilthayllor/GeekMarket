@@ -1,0 +1,32 @@
+﻿.application-drawer-toggle {
+    visibility: visible;
+}
+
+.app-bar-link {
+    display: flex;
+}
+
+    .app-bar-link.disable-icon .mud-nav-link-text {
+        margin: 0 auto !important;
+    }
+
+.app-bar-link-active {
+    color: var(--mud-palette-primary);
+    background-color: var(--mud-palette-primary-hover);
+}
+
+.mud-nav-item.toolbar-link {
+    width: auto;
+}
+
+
+.text-logo {
+    letter-spacing: 0.2rem;
+}
+
+
+@media (max-width: 700px) {
+    .application-drawer-toggle {
+        visibility: visible;
+    }
+}

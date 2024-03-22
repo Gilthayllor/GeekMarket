@@ -11,8 +11,14 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddSingleton<IToastService, ToastService>();
-
 builder.Services.AddMudServices();
+
+builder.Services.AddHttpClient("ServiceClient",x =>
+{
+    x.BaseAddress = new Uri(builder.Configuration["ServiceUrl"] ?? "");
+});
+
+builder.Services.AddScoped<IBaseService, BaseService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 await builder.Build().RunAsync();

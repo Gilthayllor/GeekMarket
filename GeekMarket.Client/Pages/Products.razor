@@ -1,46 +1,34 @@
 ﻿@page "/products"
-@using System.Globalization
+@inject IProductService _productService
 
-<div class="products-list">
-    <ListHeader Title="Produtos">
-        <button class="btn-action-list add" type="button">
-            Novo produto
-        </button>
-    </ListHeader>
-    <DefaultTable Items="_products" Context="product">
-        <TableHeader>
-            <th>Nome</th>
-            <th>Descrição</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th>Imagem</th>
-            <th>Ações</th>
-        </TableHeader>
-        <RowTemplate>
-            <td>@product.Name</td>
-            <td>@product.Description</td>
-            <td>@product.Price.ToString("c2")</td>
-            <td>@product.Quantity</td>
-            <td>
-                <div class="td-image">
-                    <span class="material-symbols-outlined">file_open</span>
-                    <span>Abrir imagem</span>
-                </div>
-            </td>
-            <td>
-                <button class="btn-action-list" type="button">
-                    <span class="material-symbols-outlined">edit</span>
-                </button>
-                <button class="btn-action-list delete" type="button">
-                    <span class="material-symbols-outlined">delete</span>
-                </button>
-            </td>
-        </RowTemplate>
-    </DefaultTable>
-</div>
+<MudTable Items="_products" Context="product">
+    <HeaderContent>
+        <MudTh>Nome</MudTh>
+        <MudTh>Descrição</MudTh>
+        <MudTh>Preço</MudTh>
+        <MudTh>Quantidade</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@product.Name</MudTd>
+        <MudTd>@product.Description</MudTd>
+        <MudTd>@product.Price</MudTd>
+        <MudTd>@product.Quantity</MudTd>
+    </RowTemplate>
+</MudTable>
+
 @code {
-    private List<ProductDTO> _products = new List<ProductDTO>
+    private IEnumerable<ProductDTO> _products = new List<ProductDTO>();
+
+
+    protected override async Task OnInitializedAsync()
     {
-        new ProductDTO(Guid.NewGuid(), "Teste", "Descrição teste", 1500M, "tesdas", 4, false, DateTime.UtcNow)
-    };
+        var result = await _productService.GetAll(true);
+
+        if (result.IsSuccess)
+        {
+            _products = result.Data;
+        }
+
+        await base.OnInitializedAsync();
+    }
 }

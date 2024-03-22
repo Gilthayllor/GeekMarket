@@ -1,0 +1,43 @@
+﻿<MudAppBar ToolBarClass="application-toolbar" Elevation="1" DisableGutters>
+    <MudContainer Class="d-flex flex-row align-center">
+        <div class="d-flex d-md-none align-center flex-grow-1">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.False" OnClick="DrawerToggle" />
+            <MudSpacer />
+            <a class="d-flex align-center me-4" href="/">
+                <MudImage Src="./assets/geekmarket-logo.svg" Alt="logo" ObjectFit="ObjectFit.ScaleDown"></MudImage>
+                <MudText Typo="Typo.h5" Color="Color.Primary" Class="text-logo">GeekMarket</MudText>
+            </a>
+            <MudSpacer />
+        </div>
+        <div class="d-none d-md-flex align-center flex-grow-1">
+            <a class="d-flex align-center me-4" href="/">
+                <MudImage Src="./assets/geekmarket-logo.svg" Alt="logo"></MudImage>
+                <MudText Typo="Typo.h5" Color="Color.Primary" Class="text-logo">GeekMarket</MudText>
+            </a>
+            <AppBarButton Match="NavLinkMatch.All" StyleClass="mx-1" ActiveClass="app-bar-link-active" Href="/products">Produtos</AppBarButton>
+        </div>
+    </MudContainer>
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Anchor="Anchor.Left" DisableOverlay>
+        <MudNavMenu>
+            <MudNavLink Href="/products">Products</MudNavLink>
+            <MudNavLink Href="/security">Security</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+</MudAppBar>
+
+
+@code {
+    [Inject]
+    private NavigationManager _navigationManager { get; set; } = null!;
+
+    private bool _drawerOpen;
+    private MudButton btnProducts = null!;
+
+    private string _styleButtons = "text-transform:none;";
+
+
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

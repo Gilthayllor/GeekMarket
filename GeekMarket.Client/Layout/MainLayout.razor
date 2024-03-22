@@ -1,32 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
-
 <MudThemeProvider Theme="_themeManager.Theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 <MudLayout>
-    <MudAppBar ToolBarClass="application-toolbar" Elevation="1">
-        <MudContainer Class="d-flex flex-row align-center">
-            <MudLink Class="application-logo d-inline-flex" Href="/">
-                <MudImage Src="./assets/logo_geekmarket.svg"></MudImage>
-            </MudLink>
-            <MudSpacer />
-            <MudNavMenu>
-                <MudLink Href="/products" Underline="Underline.None">Produtos</MudLink>
-            </MudNavMenu>
-        </MudContainer>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" Class="application-drawer-toggle" />
-    </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Anchor="Anchor.Right" DisableOverlay>
-        <MudButton>Test</MudButton>
-    </MudDrawer>
+    <AppBar/>
     <MudMainContent>
         @Body
     </MudMainContent>
 </MudLayout>
 
-<MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
-<MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
+@* <MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
+<MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" /> *@
 
 @code {
     private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
@@ -45,11 +30,6 @@
         StateHasChanged();
     }
 
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-
     protected override void OnInitialized()
     {
         _themeManager.Theme = new MudTheme
@@ -60,10 +40,20 @@
                 },
                 Palette = new PaletteLight
                 {
-                    Primary = new MudColor("#011638"),
-                    DrawerBackground = new MudColor("#ecf0ff"),
+                    Primary = new MudColor("#0066FF"),
+                    DrawerBackground = new MudColor("#ffffff"),
                     AppbarBackground = new MudColor("#ecf0ff"),
                     AppbarText = new MudColor("#011638"),
+                },
+                Typography = new Typography
+                {
+                    Default = new Default
+                    {
+                        FontFamily = new string[] { "Quicksand", "sans-serif" },
+                        FontSize = "16px",
+                        FontWeight = 400,
+                        LetterSpacing = ".0075em"
+                    }
                 }
             };
 

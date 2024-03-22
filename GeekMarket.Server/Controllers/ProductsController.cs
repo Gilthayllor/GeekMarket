@@ -2,14 +2,13 @@
 using GeekMarket.Shared.DTOs.Product;
 using GeekMarket.Shared.Extensions;
 using GeekMarket.Shared.Reponse;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
 namespace GeekMarket.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
