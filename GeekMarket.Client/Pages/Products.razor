@@ -1,5 +1,6 @@
 ﻿@page "/products"
 @inject IProductService _productService
+@inject IDialogService _dialogService
 
 <MudContainer>
     <MudTable Items="_products" Context="product" Hover Loading="_loadingProducts" Striped Breakpoint="Breakpoint.None" Elevation="0">
@@ -11,12 +12,25 @@
             <MudTh>Descrição</MudTh>
             <MudTh>Preço</MudTh>
             <MudTh>Quantidade</MudTh>
+            <MudTh>Imagem</MudTh>
+            <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd>@product.Name</MudTd>
             <MudTd>@product.Description</MudTd>
             <MudTd>@product.Price</MudTd>
             <MudTd>@product.Quantity</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Image"></MudIconButton>
+            </MudTd>
+            <MudTd>
+                <MudTooltip Text="Editar Produto" Delay="650" ShowOnClick="false">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" />
+                </MudTooltip>
+                <MudTooltip Text="Excluir Produto" Delay="650" ShowOnClick="false">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteProduct(product.Id)"/>
+                </MudTooltip>
+            </MudTd>
         </RowTemplate>
     </MudTable>
 </MudContainer>
@@ -24,7 +38,6 @@
 @code {
     private IEnumerable<ProductDTO> _products = new List<ProductDTO>();
     private bool _loadingProducts;
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,5 +56,20 @@
         }
 
         _loadingProducts = false;
+    }
+
+    private async Task DeleteProduct(Guid id)
+    {
+        var parameters = new DialogParameters<DeleteConfirmationDialog>();
+        parameters.Add(x => x.Content, "Tem certeza que deseja excluir o produto?");
+        parameters.Add(x => x.ConfirmButtonText, "Excluir");
+        parameters.Add(x => x.ConfirmButtonColor, Color.Error);
+
+        var dialogResult = await _dialogService.Show<DeleteConfirmationDialog>("Excluir produto", parameters).Result;
+
+        if (!dialogResult.Canceled)
+        {
+            Console.WriteLine("Excluir");
+        }
     }
 }
