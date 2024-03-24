@@ -5,20 +5,6 @@
     -webkit-font-smoothing: antialiased;
 }
 
-/*body {
-    background: var(--background);
-    font-family: 'Quicksand', sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-}*/
-
-.main-wrapper {
-    max-width: 75rem;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }

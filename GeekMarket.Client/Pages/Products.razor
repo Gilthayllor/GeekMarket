@@ -1,34 +1,47 @@
 ﻿@page "/products"
 @inject IProductService _productService
 
-<MudTable Items="_products" Context="product">
-    <HeaderContent>
-        <MudTh>Nome</MudTh>
-        <MudTh>Descrição</MudTh>
-        <MudTh>Preço</MudTh>
-        <MudTh>Quantidade</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd>@product.Name</MudTd>
-        <MudTd>@product.Description</MudTd>
-        <MudTd>@product.Price</MudTd>
-        <MudTd>@product.Quantity</MudTd>
-    </RowTemplate>
-</MudTable>
+<MudContainer>
+    <MudTable Items="_products" Context="product" Hover Loading="_loadingProducts" Striped Breakpoint="Breakpoint.None" Elevation="0">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Produtos</MudText>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Nome</MudTh>
+            <MudTh>Descrição</MudTh>
+            <MudTh>Preço</MudTh>
+            <MudTh>Quantidade</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@product.Name</MudTd>
+            <MudTd>@product.Description</MudTd>
+            <MudTd>@product.Price</MudTd>
+            <MudTd>@product.Quantity</MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudContainer>
 
 @code {
     private IEnumerable<ProductDTO> _products = new List<ProductDTO>();
+    private bool _loadingProducts;
 
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await _productService.GetAll(true);
+        await GetProducts(true);
+    }
+
+    private async Task GetProducts(bool featured)
+    {
+        _loadingProducts = true;
+
+        var result = await _productService.GetAll(featured);
 
         if (result.IsSuccess)
         {
             _products = result.Data;
         }
 
-        await base.OnInitializedAsync();
+        _loadingProducts = false;
     }
 }
