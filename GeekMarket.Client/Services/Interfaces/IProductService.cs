@@ -6,5 +6,6 @@ namespace GeekMarket.Client.Services.Interfaces
     public interface IProductService
     {
         Task<Result<IEnumerable<ProductDTO>>> GetAll(bool featured);
+        Task<Result> DeleteProduct(string id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿@page "/products"
 @inject IProductService _productService
 @inject IDialogService _dialogService
+@inject ISnackbar _snackBar
 
 <MudContainer>
     <MudTable Items="_products" Context="product" Hover Loading="_loadingProducts" Striped Breakpoint="Breakpoint.None" Elevation="0">
@@ -24,11 +25,11 @@
                 <MudIconButton Icon="@Icons.Material.Filled.Image"></MudIconButton>
             </MudTd>
             <MudTd>
-                <MudTooltip Text="Editar Produto" Delay="650" ShowOnClick="false">
+                <MudTooltip Text="Editar Produto" Delay="650">
                     <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" />
                 </MudTooltip>
-                <MudTooltip Text="Excluir Produto" Delay="650" ShowOnClick="false">
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteProduct(product.Id)"/>
+                <MudTooltip Text="Excluir Produto" Delay="650">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteProduct(product.Id)" />
                 </MudTooltip>
             </MudTd>
         </RowTemplate>
@@ -36,7 +37,7 @@
 </MudContainer>
 
 @code {
-    private IEnumerable<ProductDTO> _products = new List<ProductDTO>();
+    private List<ProductDTO> _products = new List<ProductDTO>();
     private bool _loadingProducts;
 
     protected override async Task OnInitializedAsync()
@@ -52,7 +53,7 @@
 
         if (result.IsSuccess)
         {
-            _products = result.Data;
+            _products = result.Data.ToList();
         }
 
         _loadingProducts = false;
@@ -69,7 +70,44 @@
 
         if (!dialogResult.Canceled)
         {
-            Console.WriteLine("Excluir");
+            var result = await _productService.DeleteProduct(id.ToString());
+
+            if (result.IsSuccess)
+            {
+                AddSnackBar(Severity.Success, "Produto excluído com sucesso!");
+                RemoveProduct(id);
+
+                return;
+            }
+
+            AddSnackBar(Severity.Error, "Erro ao excluir produto!", "Teste de mensagem de erro..sdasda..dasd...dad");
         }
+    }
+
+    private void AddSnackBar(Severity severity, string message)
+    {
+        _snackBar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        _snackBar.Add(message, severity);
+    }
+
+    private void AddSnackBar(Severity severity, string title, string message)
+    {
+        _snackBar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        _snackBar.Add(
+    @<div>
+        <span>@title</span>
+        <p>@message</p>
+    </div>
+    ,
+    severity
+        );
+    }
+
+    private void RemoveProduct(Guid id)
+    {
+        var product = _products.FirstOrDefault(x => x.Id == id);
+
+        if (product != null)
+            _products.Remove(product);
     }
 }

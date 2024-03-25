@@ -10,6 +10,7 @@ namespace GeekMarket.Client.Services.Implementations
     {
         public ProductService(HttpClient client) : base(client) { }
 
+
         public async Task<Result<IEnumerable<ProductDTO>>> GetAll(bool featured)
         {
             var result = await SendAsync<IEnumerable<ProductDTO>>(new Request
@@ -21,6 +22,16 @@ namespace GeekMarket.Client.Services.Implementations
                 }
             });
             
+            return result;
+        }
+        public async Task<Result> DeleteProduct(string id)
+        {
+            var result = await SendAsync<Result>(new Request
+            {
+                Url = $"api/v1/products/{id}",
+                Method = Request.MethodTypeEnumeration.DELETE
+            });
+
             return result;
         }
     }
