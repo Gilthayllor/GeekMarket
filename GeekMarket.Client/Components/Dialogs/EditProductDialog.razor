@@ -1,0 +1,110 @@
+﻿@inject IFileConverter _fileConverter
+
+<MudDialog>
+    <TitleContent>
+        <MudText Class="d-flex align-center">
+            <MudIcon Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" Class="mr-2" />
+            @if (IsEdit)
+            {
+                <text>Editar Produto</text>
+            }
+            else
+            {
+                <text>Novo Produto</text>
+            }
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @bind-IsValid="@_validationProductResult" Model="ProductEdit" @ref="_productForm">
+            <MudTextField @bind-Value="@ProductEdit.Name" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.EditAttributes" Label="Nome"/>
+            <MudTextField @bind-Value="@ProductEdit.Description" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.EditAttributes" Label="Descrição" />
+            <MudTextField @bind-Value="@ProductEdit.Price" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Money" Label="Preço" />
+            <MudTextField @bind-Value="@ProductEdit.Quantity" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Numbers" Label="Quantidade" />
+            <div class="d-flex">
+                <MudCheckBox @bind-Value="@ProductEdit.Featured" Label="Destaque" LabelPosition="LabelPosition.Start" Color="Color.Primary" />
+                <MudSpacer />
+            </div>
+            <MudFileUpload T="IBrowserFile" FilesChanged="HandleFilesChanged" Accept=".png, .jpg, .jpeg">
+                <ButtonTemplate>
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.CloudUpload"
+                               for="@context.Id">
+                        @if (string.IsNullOrEmpty(ProductEdit.Base64Image))
+                        {
+                            <text>Carregar Imagem</text>
+                        }
+                        else
+                        {
+                            <text>Editar Imagem</text>
+                        }
+                    </MudButton>
+
+                </ButtonTemplate>
+                <SelectedTemplate>
+                    @if (!string.IsNullOrEmpty(_productImageInfo.Base64))
+                    {
+                        <MudLink Underline="Underline.None" Class="d-flex align-center mt-1" OnClick="() => _imageDialogVisible = true">
+                            @(_productImageInfo.FileName)
+                            <MudIcon Icon="@Icons.Material.Filled.AttachFile" />
+                        </MudLink>
+                    }
+                    else
+                    {
+                        <MudText Class="mt-1">Selecione uma imagem</MudText>
+                    }
+                </SelectedTemplate>
+            </MudFileUpload>
+        </MudForm>
+        <MudDialog @bind-IsVisible="_imageDialogVisible">
+            <DialogContent>
+                <MudImage Src="@GetSrc()" Fluid="true" Alt="Imagem do produto" />
+            </DialogContent>
+        </MudDialog>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="() => Dialog.Close()" Disabled="@(!_validationProductResult)">Salvar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [Parameter]
+    public ProductEditDTO ProductEdit { get; set; } = new();
+
+    [Parameter]
+    public bool IsEdit { get; set; }
+
+    [CascadingParameter]
+    public MudDialogInstance Dialog { get; set; } = null!;
+
+    private MudForm _productForm = null!;
+
+    private bool _imageDialogVisible;
+    private bool _validationProductResult;
+    private (string FileName, string FileExtension, string Base64) _productImageInfo = new("", "", "");
+
+
+    protected override void OnInitialized()
+    {
+        _productImageInfo = _fileConverter.GetPropertiesFromBase64(ProductEdit.Base64Image ?? "");
+    }
+
+    private async Task HandleFilesChanged(IBrowserFile file)
+    {
+        var base64 = await _fileConverter.ToBase64(file);
+
+        _productImageInfo = _fileConverter.GetPropertiesFromBase64(base64);
+
+        ProductEdit.Base64Image = base64;
+
+        StateHasChanged();
+    }
+
+    private string GetSrc()
+    {
+        var extension = _productImageInfo.FileExtension ?? "jpg";
+        return $"data:image/{extension}; base64, {_productImageInfo.Base64}";
+    }
+}
