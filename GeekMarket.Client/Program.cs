@@ -1,4 +1,5 @@
 using GeekMarket.Client;
+using GeekMarket.Client.Converters;
 using GeekMarket.Client.Services.Implementations;
 using GeekMarket.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
@@ -20,5 +21,6 @@ builder.Services.AddHttpClient("ServiceClient",x =>
 
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddSingleton<IFileConverter, FileConverter>();
 
 await builder.Build().RunAsync();

@@ -2,6 +2,7 @@
 @inject IProductService _productService
 @inject IDialogService _dialogService
 @inject ISnackbar _snackBar
+@inject IFileConverter _fileConverter;
 
 <MudContainer>
     <MudTable Items="_products" Context="product" Hover Loading="_loadingProducts" Striped Breakpoint="Breakpoint.None" Elevation="0">
@@ -26,10 +27,10 @@
             </MudTd>
             <MudTd>
                 <MudTooltip Text="Editar Produto" Delay="650">
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => HandleEditProductClick(product)" />
                 </MudTooltip>
                 <MudTooltip Text="Excluir Produto" Delay="650">
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteProduct(product.Id)" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => HandleDeleteProductClick(product.Id)" />
                 </MudTooltip>
             </MudTd>
         </RowTemplate>
@@ -38,7 +39,17 @@
 
 @code {
     private List<ProductDTO> _products = new List<ProductDTO>();
+
     private bool _loadingProducts;
+    private bool _editProductDialogVisible;
+    private DialogOptions _dialogOptions = new DialogOptions
+            {
+                MaxWidth = MaxWidth.Medium,
+                FullWidth = true,
+                CloseOnEscapeKey = true
+            };
+
+    private ProductEditDTO _editProductDTO = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,7 +70,7 @@
         _loadingProducts = false;
     }
 
-    private async Task DeleteProduct(Guid id)
+    private async Task HandleDeleteProductClick(Guid id)
     {
         var parameters = new DialogParameters<DeleteConfirmationDialog>();
         parameters.Add(x => x.Content, "Tem certeza que deseja excluir o produto?");
@@ -84,16 +95,30 @@
         }
     }
 
+    private async Task HandleEditProductClick(ProductDTO product)
+    {
+        _editProductDTO = product.ToEdit();
+
+        var parameters = new DialogParameters<EditProductDialog>();
+        parameters.Add(x => x.ProductEdit, _editProductDTO);
+
+        var dialogResult = await _dialogService.Show<EditProductDialog>("Edit", parameters, _dialogOptions).Result;
+
+        if (!dialogResult.Canceled)
+        {
+            _snackBar.Add("Editar");
+        }
+    }
+
     private void AddSnackBar(Severity severity, string message)
     {
-        _snackBar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
         _snackBar.Add(message, severity);
     }
 
     private void AddSnackBar(Severity severity, string title, string message)
     {
-        _snackBar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-        _snackBar.Add(
+        _snackBar.Add
+        (
     @<div>
         <span>@title</span>
         <p>@message</p>
