@@ -2,7 +2,6 @@
 using GeekMarket.Client.Utils;
 using GeekMarket.Shared.DTOs.Product;
 using GeekMarket.Shared.Reponse;
-using System.Runtime.CompilerServices;
 
 namespace GeekMarket.Client.Services.Implementations
 {

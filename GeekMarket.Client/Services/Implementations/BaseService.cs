@@ -88,7 +88,7 @@ namespace GeekMarket.Client.Services.Implementations
 
                 if (!httpResponse.IsSuccessStatusCode && string.IsNullOrEmpty(result.Error))
                 {
-                    return Result.Failure($"Ocorreu um erro ao realizar a requisição [{httpResponse.ReasonPhrase}]");
+                    return Result.Failure($"Ocorreu um erro ao fazer a requisição [{httpResponse.ReasonPhrase}]");
                 }
 
                 return result;

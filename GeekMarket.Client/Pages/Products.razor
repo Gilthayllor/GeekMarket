@@ -1,4 +1,5 @@
 ﻿@page "/products"
+@using System.Collections.ObjectModel
 @inject IProductService _productService
 @inject IDialogService _dialogService
 @inject ISnackbar _snackBar
@@ -38,7 +39,7 @@
 </MudContainer>
 
 @code {
-    private List<ProductDTO> _products = new List<ProductDTO>();
+    private ObservableCollection<ProductDTO> _products = new ObservableCollection<ProductDTO>();
 
     private bool _loadingProducts;
     private bool _editProductDialogVisible;
@@ -48,6 +49,8 @@
                 FullWidth = true,
                 CloseOnEscapeKey = true
             };
+
+    private MudTable<List<ProductDTO>> daa;
 
     private ProductEditDTO _editProductDTO = null!;
 
@@ -64,7 +67,7 @@
 
         if (result.IsSuccess)
         {
-            _products = result.Data.ToList();
+            _products = new(result.Data);
         }
 
         _loadingProducts = false;
@@ -110,26 +113,26 @@
 
             if (result.IsSuccess)
             {
+                ChangeProduct(product.Id, result.Data);
+                
                 AddSnackBar(Severity.Success, "Produto alterado com sucesso!");
 
-                product = result.Data;
-
-                StateHasChanged();
-                
                 return;
             }
 
-            AddSnackBar(Severity.Error, "Erro ao excluir produto!", result.Error ?? "");
+            AddSnackBar(Severity.Error, "Erro ao editar produto!", result.Error ?? "");
         }
     }
 
     private void AddSnackBar(Severity severity, string message)
     {
+        _snackBar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
         _snackBar.Add(message, severity);
     }
 
     private void AddSnackBar(Severity severity, string title, string message)
     {
+        _snackBar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
         _snackBar.Add
     (
     @<div>
@@ -147,5 +150,18 @@
 
         if (product != null)
             _products.Remove(product);
+    }
+
+    private void ChangeProduct(Guid id, ProductDTO productEdit)
+    {
+        var product = _products.FirstOrDefault(x => x.Id == id);
+
+        product.Featured = productEdit.Featured;
+        product.LastUpdate = productEdit.LastUpdate;
+        product.Price = productEdit.Price;
+        product.Quantity = productEdit.Quantity;
+        product.Base64Image = productEdit.Base64Image;
+        product.Description = productEdit.Description;
+        product.Name = productEdit.Name;
     }
 }
