@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews()
     .ConfigureApiBehaviorOptions(x =>
     {
-        x.SuppressModelStateInvalidFilter = true;
+        //x.SuppressModelStateInvalidFilter = true;
     });
 
 builder.Services.AddRazorPages();

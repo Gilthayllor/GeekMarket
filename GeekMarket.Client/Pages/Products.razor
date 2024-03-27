@@ -91,7 +91,7 @@
                 return;
             }
 
-            AddSnackBar(Severity.Error, "Erro ao excluir produto!", "Teste de mensagem de erro..sdasda..dasd...dad");
+            AddSnackBar(Severity.Error, "Erro ao excluir produto!", result.Error ?? "");
         }
     }
 
@@ -106,7 +106,20 @@
 
         if (!dialogResult.Canceled)
         {
-            _snackBar.Add("Editar");
+            var result = await _productService.EditProduct(product.Id, _editProductDTO);
+
+            if (result.IsSuccess)
+            {
+                AddSnackBar(Severity.Success, "Produto alterado com sucesso!");
+
+                product = result.Data;
+
+                StateHasChanged();
+                
+                return;
+            }
+
+            AddSnackBar(Severity.Error, "Erro ao excluir produto!", result.Error ?? "");
         }
     }
 
@@ -118,7 +131,7 @@
     private void AddSnackBar(Severity severity, string title, string message)
     {
         _snackBar.Add
-        (
+    (
     @<div>
         <span>@title</span>
         <p>@message</p>

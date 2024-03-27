@@ -22,6 +22,19 @@ namespace GeekMarket.Shared.Extensions
             return list;
         }
 
+        public static ProductEditDTO ToEdit(this ProductDTO product)
+        {
+            return new ProductEditDTO
+            {
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Base64Image = product.Base64Image,
+                Quantity = product.Quantity,
+                Featured = product.Featured
+            };
+        }
+
         public static Product ToModel(this ProductEditDTO productEditDTO)
         {
             return new Product

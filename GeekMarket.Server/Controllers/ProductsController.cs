@@ -21,8 +21,8 @@ namespace GeekMarket.Server.Controllers
             _logger = logger;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] string id)
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetById([FromRoute] string id)
         {
             try
             {

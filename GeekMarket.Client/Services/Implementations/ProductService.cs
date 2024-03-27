@@ -24,6 +24,18 @@ namespace GeekMarket.Client.Services.Implementations
             
             return result;
         }
+        
+        public async Task<Result<ProductDTO>> EditProduct(Guid id, ProductEditDTO productEdit)
+        {
+            var result = await SendAsync<ProductDTO>(new Request
+            {
+                Url = $"api/v1/products/{id}",
+                Method = Request.MethodTypeEnumeration.PUT,
+                Data = productEdit
+            });
+            
+            return result;
+        }
         public async Task<Result> DeleteProduct(string id)
         {
             var result = await SendAsync<Result>(new Request

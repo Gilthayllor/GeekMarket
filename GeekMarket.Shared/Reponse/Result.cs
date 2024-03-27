@@ -1,46 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace GeekMarket.Shared.Reponse
+﻿namespace GeekMarket.Shared.Reponse
 {
     public class Result
     {
-        protected Result()
-        {
-            Error = string.Empty;
-            IsSuccess = true;
-        }
-
-        protected Result(bool isSuccess, string error)
-        {
-            IsSuccess = isSuccess;
-            Error = error;
-        }
-
-        public bool IsSuccess { get; }
-
-        public bool IsFailure => !IsSuccess;
-
-        public string Error { get; }
-
-        public static Result Success() => new();
-
-        public static Result Failure(string error) => new(false, error);
+        public bool IsSuccess { get; init; }
+        public string? Error { get; init; }
+        
+        public static Result Success() => new Result { IsSuccess = true };
+        public static Result Failure(string error) => new Result { IsSuccess = false, Error = error };
     }
 
     public class Result<T> : Result
     {
-        public T Data { get; set; }
-
-        public Result(T data) : base()
-        {
-            Data = data;
-        }
-
-        public static Result<T> Success(T data) => new(data);
+        public T? Data { get; init; }
+        
+        public static Result<T> Success<T>(T data) => new Result<T> { IsSuccess = true, Data = data };
     }
 }

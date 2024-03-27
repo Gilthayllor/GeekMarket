@@ -46,7 +46,15 @@ namespace GeekMarket.Client.Services.Implementations
                 HttpResponseMessage httpResponse = await _httpClient.SendAsync(requestMessage);
 
                 var contentResponse = await httpResponse.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<Result<T>>(contentResponse, SerializerOptions)!;
+
+                var result = JsonSerializer.Deserialize<Result<T>>(contentResponse, SerializerOptions)!;
+
+                if (!httpResponse.IsSuccessStatusCode && string.IsNullOrEmpty(result.Error))
+                {
+                    return Result<T>.Failure("Ocorreu um erro ao realizar a reuisição.");
+                }
+
+                return result;
             }
             catch (Exception)
             {
@@ -75,7 +83,15 @@ namespace GeekMarket.Client.Services.Implementations
                 HttpResponseMessage httpResponse = await _httpClient.SendAsync(requestMessage);
 
                 var contentResponse = await httpResponse.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<Result>(contentResponse, SerializerOptions)!;
+                
+                var result = JsonSerializer.Deserialize<Result>(contentResponse, SerializerOptions)!;
+
+                if (!httpResponse.IsSuccessStatusCode && string.IsNullOrEmpty(result.Error))
+                {
+                    return Result.Failure("Ocorreu um erro ao realizar a reuisição.");
+                }
+
+                return result;
             }
             catch (Exception)
             {
